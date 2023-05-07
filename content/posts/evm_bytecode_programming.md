@@ -2,7 +2,7 @@
 title: "EVM Bytecode Programming"
 date: 2022-06-13T21:13:40+08:00
 draft: false
-tags: ['evm', 'bytecode', 'learning-note']
+tags: ['ethereum', 'evm', 'bytecode', 'learning-note']
 summary: The basic knowledge of EVM bytecode programming.
 ---
 
