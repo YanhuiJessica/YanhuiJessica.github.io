@@ -3,6 +3,7 @@ title: "Gas Optimization Techniques"
 date: 2023-06-03T22:46:51+08:00
 draft: true
 tags: ['solidity', 'gas-optimization', 'learning-note']
+summary: Some tested gas optimization techniques.
 ---
 
 ## Variables
@@ -10,6 +11,7 @@ tags: ['solidity', 'gas-optimization', 'learning-note']
 - 减少访问状态变量的次数，有策略地使用本地变量缓存
 - 在条件允许的情况下，选择尺寸小的 uint，从而能够将变量打包在一起减少存储空间
     - 打包同时读写频率高的变量
+    - 独立使用频率高的变量，选择 `uint256`，减少 masking operations 的开销
 
 ## Loop
 
@@ -29,3 +31,4 @@ tags: ['solidity', 'gas-optimization', 'learning-note']
 ## References
 
 - [Solidity Gas Optimization Techniques: Loops - HackMD](https://hackmd.io/@totomanov/gas-optimization-loops)
+- [Solidity Gas Golfing #1. Gas Golfing #1: uint8 vs uint256 | by Sudeep Sagar | CoinsBench](https://coinsbench.com/an%CC%A3uha-solidity-gas-golfing-1-6e53269b03e4)
