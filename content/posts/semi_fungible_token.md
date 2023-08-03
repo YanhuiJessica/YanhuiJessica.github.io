@@ -19,7 +19,7 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
 
 ## Specification
 
-- Every ERC3525 compliant contract must implement the ERC3525, ERC721 and ERC165 interfaces
+- Every ERC3525 compliant contract must implement the ERC3525, **ERC721** and ERC165 interfaces
 
     ```js
     interface IERC3525 is IERC165, IERC721 {
