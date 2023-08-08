@@ -58,7 +58,10 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
     interface IERC3525SlotEnumerable is IERC3525 {
         function slotCount() external view returns (uint256);
         function slotByIndex(uint256 _index) external view returns (uint256);
+
+        /// @notice Get the total amount of tokens with the same slot
         function tokenSupplyInSlot(uint256 _slot) external view returns (uint256);
+        /// @notice Get the token at the specified index of all tokens with the same slot
         function tokenInSlotByIndex(uint256 _slot, uint256 _index) external view returns (uint256);
     }
     ```
