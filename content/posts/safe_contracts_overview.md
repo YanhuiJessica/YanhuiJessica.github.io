@@ -1,8 +1,8 @@
 ---
-title: "Safe Contracts Overview"
+title: "Overview: Safe Contracts"
 date: 2023-08-11T16:37:00+08:00
 draft: false
-tags: ['solidity', 'gnosis-safe', 'safe', 'smart-contract', 'learning-note']
+tags: ['solidity', 'gnosis-safe', 'safe', 'smart-contract', 'overview', 'learning-note']
 summary: An overview of the Safe contracts, for a better understanding.
 mermaid: true
 ---
