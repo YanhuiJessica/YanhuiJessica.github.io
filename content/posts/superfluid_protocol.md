@@ -78,9 +78,23 @@ Real-Time Balance = Netflow Rate * Seconds elapsed since latest CRUD timestamp
 
 ##### Solvency and Sentinels
 
+![Liquidation and Solvency](/img/superfluid_protocol01.jpg)
+
 - When an account with a negative netflow rate reaches a zero balance, it's deemed **critical**
 - When a stream is opened, a certain amount of Super Tokens are withheld as a **buffer**, which will be refunded if an account cancels outbound streams before going critical
 - When an account does go critical, Super Tokens from the buffer are used to continue the account's outbound stream(s) until **Sentinels** step in and cancel them. The remainder of the buffer is rewarded to the Sentinel who closes the stream
+    - The critical period is subdivided into 2 sub-periods
+        - **Patrician Period** starts when the stream becomes critical (duration defined as governance parameter)
+        - **Plebs Period** spans the remaining timeframe until the stream becomes insolvent
+- The **insolvent** period (**Pirate Period**) begins when the sender's deposit is completely consumed but the stream isn't closed. The `deficit` will be recorded as the stream continues and deducted from the PICs stake as a slashing fee when the stream is eventually closed
+
+    > **PIC (Patrician in Charge)** To become a PIC for a token, Patricians must post a `stake` higher than the existing `stake` to the TOGA (Transparent OnGoing Auction) contract
+
+Liquidation | Reward | Reward taken from | Reward amount | Capital costs
+-|-|-|-|-
+Patrician | To TOGA | Buffer | All the buffer left | TOGA Auction
+Pleb | To sentinel | Buffer | All the buffer left | none
+Pirate | To sentinel | Patrician TOGA stake | original Buffer amount | none
 
 #### ✳ Instant Distribution Agreement (IDA)
 
@@ -102,7 +116,7 @@ Index -- +200 USDCx --> Z(Account Z\n10 units)
 - **Units** Dictate the proportion of Super Tokens distributed through an index that a subscriber is to receive. They work like distribution _shares_
 - **Publisher** / **Subscribers**
 
-![Formula](/img/superfluid_protocol01.jpg)
+![Formula](/img/superfluid_protocol02.jpg)
 
 #### 🌊 General Distribution Agreement (GDA)
 
@@ -185,3 +199,4 @@ change2App -- 5 --> after
 - [Use Cases - Superfluid](https://docs.superfluid.finance/superfluid/protocol-overview/use-cases)
 - [In-Depth Overview - Superfluid](https://docs.superfluid.finance/superfluid/protocol-overview/in-depth-overview)
 - [Super Apps in Depth - Superfluid](https://docs.superfluid.finance/superfluid/developers/super-apps/super-app)
+- [Liquidations & TOGA - Superfluid](https://docs.superfluid.finance/superfluid/sentinels/liquidations-and-toga)
