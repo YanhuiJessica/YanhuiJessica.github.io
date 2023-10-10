@@ -33,6 +33,7 @@ Current Balance = Real-Time Balances + Static Balance
 
 - **Static Balance** equivalent to the usual ERC20 token balance
 - **Real-Time Balances** the individual impact (positive / negative) that each Super Agreement has on an account's balance (information grabbed through the Host contract)
+- Super tokens will *always* have 18 decimals
 
 #### Wrapper
 
@@ -166,25 +167,14 @@ Super App rules should be obeyed, or contracts risk being **jailed** by the prot
 ---
 title: Starting an outbound stream to a Super App
 ---
-flowchart TD
+sequenceDiagram
 
-subgraph "Superfluid Host"
-CA("callAgreement() / callAgreementWithContext()")
-before("callAppBeforeCallback()")
-after("callAppAfterCallback()")
-end
-
-subgraph "ConstantFlowAgreement"
-createFlow("createFlow()")
-change2App("_changeFlowToApp()")
-changeFlow("_changeFlow()")
-end
-
-CA -- 1 --> createFlow
-createFlow -- 2 --> change2App
-change2App -- 3 --> before
-change2App -- 4 --> changeFlow
-change2App -- 5 --> after
+User->>Superfluid Host: callAgreement() /<br/> callAgreementWithContext()
+Superfluid Host->>ConstantFlowAgreement: createFlow()
+ConstantFlowAgreement->>ConstantFlowAgreement: _changeFlowToApp()
+ConstantFlowAgreement->>Superfluid Host: callAppBeforeCallback()
+ConstantFlowAgreement->>ConstantFlowAgreement: _changeFlow()
+ConstantFlowAgreement->>Superfluid Host: callAppAfterCallback()
 ```
 
 > Note: `createFlow()` can be called directly
