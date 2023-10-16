@@ -1,5 +1,5 @@
 ---
-title: "Arbitrum Security Council Election System"
+title: "Code4rena - Arbitrum Security Council Election System"
 date: 2023-09-24T22:08:14+08:00
 draft: false
 mermaid: true
