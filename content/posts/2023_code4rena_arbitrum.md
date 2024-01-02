@@ -38,7 +38,7 @@ UpgradeExecutor->>SecurityCouncilMemberSyncAction: perform()<br>update members i
 
 Affected versions | Fixed
 -|-
-<= 4.9.3 | [Add Governor signature nonces by ernestognw · Pull Request #4378](https://github.com/OpenZeppelin/openzeppelin-contracts/pull/4378)
+< 5.0.0 | [Add Governor signature nonces by ernestognw · Pull Request #4378](https://github.com/OpenZeppelin/openzeppelin-contracts/pull/4378)
 
 - The `castVoteWithReasonAndParamsBySig()` and `castVoteBySig()` functions do not track the signature's nonce
 
