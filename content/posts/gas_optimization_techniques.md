@@ -2,7 +2,7 @@
 title: "Gas Optimization Techniques"
 date: 2023-06-03T22:46:51+08:00
 draft: true
-tags: ['solidity', 'gas-optimization', 'learning-note']
+tags: ['solidity', 'gas', 'gas-optimization', 'learning-note']
 summary: Some tested gas optimization techniques.
 ---
 
