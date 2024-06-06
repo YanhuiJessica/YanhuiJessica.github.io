@@ -55,9 +55,10 @@ Users send `UserOperation` objects to a dedicated user operation mempool (differ
     ```
 
 - **Bundler** a node that can handle UserOperations, create a valid an `EntryPoint.handleOps()` transaction, and add it to the block while it is still valid
+- **Paymaster** a helper contract that agrees to pay for the transaction
 - **Aggregator** a helper contract trusted by accounts to validate an aggregated signature
 
-#### Account
+### Account
 
 ```js
 interface IAccount {
@@ -78,6 +79,17 @@ The account:
     - `authorizer` (20 bytes) 0 for valid signature, 1 to mark signature failure. Otherwise, an address of an authorizer (signature aggregator) contract
     - `validUntil` (6 bytes) zero for indefinite
     - `validAfter` (6 bytes) 
+
+### Paymasters
+
+- Can be used to allow application developers to subsidize fees for their users, allow users to pay fees with ERC20 tokens, etc.
+
+![Flow with a paymaster](/img/account_abstraction_using_alt_mempool01.svg)
+
+- If the paymaster's validatePaymasterUserOp returns a context, then `handleOps()` must call `postOp()` on the paymaster after making the main execution call
+- If a paymaster can succeed in the validation step but fail in the execution step, `postOp` will be called twice
+  1. Called as part of the same call that includes the execution within the wallet. Thus, if `postOp` reverts, the execution also reverts
+  2. Called by the EntryPoint contract again (postOpReverted)
 
 ## References
 
