@@ -19,3 +19,7 @@ theme = "hugo-theme-chicken"
     pre = "tag"
     url = "/tags/"
     weight = 3
+
+[markup.highlight]
+  noClasses = false
+  lineNos = true
