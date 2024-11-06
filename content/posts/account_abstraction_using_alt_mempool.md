@@ -1,7 +1,7 @@
 ---
 title: "ERC4337: Account Abstraction Using Alt Mempool"
 date: 2023-07-28T10:33:59+08:00
-draft: true
+draft: false
 tags: ['solidity', 'erc4337', 'account-abstraction', 'learning-note']
 summary: An account abstraction proposal which completely avoids consensus-layer protocol changes, instead relying on higher-layer infrastructure.
 ---
