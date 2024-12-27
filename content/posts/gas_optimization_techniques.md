@@ -32,3 +32,4 @@ summary: Some tested gas optimization techniques.
 
 - [Solidity Gas Optimization Techniques: Loops - HackMD](https://hackmd.io/@totomanov/gas-optimization-loops)
 - [Solidity Gas Golfing #1. Gas Golfing #1: uint8 vs uint256 | by Sudeep Sagar | CoinsBench](https://coinsbench.com/an%CC%A3uha-solidity-gas-golfing-1-6e53269b03e4)
+- [The RareSkills Book of Solidity Gas Optimization: 80+ Tips - RareSkills](https://www.rareskills.io/post/gas-optimization)
