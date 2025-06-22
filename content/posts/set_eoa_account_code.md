@@ -30,7 +30,7 @@ summary: Allows EOA to set the delegated code in their account.
     1. Verify the chain ID is 0 or the ID of the current chain.
     2. Verify the nonce is less than `2**64 - 1`.
     3. Let `authority = ecrecover(msg, y_parity, r, s)`.
-          - Where `msg = keccak(MAGIC || rip([chain_id, address, nonce]))`.
+          - Where `msg = keccak(MAGIC || rip([chain_id, address, nonce]))`[^1].
           - Verify `s` is less than or equal to `secp256k1n/2`.
     4. Add `authority` to `accessed_addresses`.
     5. Verify the code of `authority` is empty of already delegated.
@@ -50,3 +50,5 @@ summary: Allows EOA to set the delegated code in their account.
     - `CODESIZE` returns the size of the code residing at `address`.
 - When a precompile address is the target of a delegation, the retrieved code is considered empty and instructions targeting this account will execute empty code.
 - To avoid possible loops, retrieve only the first code and then stop following the delegation chain.
+
+[^1]: The value of `MAGIC` is `0x05`.
