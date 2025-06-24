@@ -28,6 +28,7 @@ summary: Allows EOA to set the delegated code in their account.
 - The authorization list is a list of tuples that indicate what code the signer of each tuple desires to execute in the context of their EOA, and it is processed before the execution portion of the transaction begins, but after the sender’s nonce is incremented.
 - For each `[chain_id, address, nonce, y_parity, r, s]` tuple, perform the following:
     1. Verify the chain ID is 0 or the ID of the current chain.
+          - If `0` is specified, authorization is signed for all chains.
     2. Verify the nonce is less than `2**64 - 1`.
     3. Let `authority = ecrecover(msg, y_parity, r, s)`.
           - Where `msg = keccak(MAGIC || rip([chain_id, address, nonce]))`[^1].
