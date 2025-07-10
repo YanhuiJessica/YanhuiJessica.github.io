@@ -79,6 +79,50 @@ Affected versions | Fixed
     }
     ```
 
+- Meanwhile, the `_countVote` function allows a voter to vote multiple times
+
+    ```js
+    function _castVote(
+        uint256 proposalId,
+        address account,
+        uint8 support,
+        string memory reason,
+        bytes memory params
+    ) internal virtual returns (uint256) {
+        ProposalCore storage proposal = _proposals[proposalId];
+        require(state(proposalId) == ProposalState.Active, "Governor: vote not currently active");
+
+        uint256 weight = _getVotes(account, proposal.voteStart.getDeadline(), params);
+        _countVote(proposalId, account, support, weight, params);
+
+        // [...]
+        return weight;
+    }
+
+    function _countVote(
+        uint256 proposalId,
+        address account,
+        uint8 support,
+        uint256 availableVotes,
+        bytes memory params
+    ) internal virtual override {
+        // [...]
+
+        uint240 weight = votesToWeight(proposalId, block.number, votes);
+        if (weight == 0) {
+            revert ZeroWeightVote(block.number, votes);
+        }
+
+        ElectionInfo storage election = _elections[proposalId];
+        uint256 prevVotesUsed = election.votesUsed[account];
+        if (prevVotesUsed + votes > availableVotes) {
+            revert InsufficientVotes(prevVotesUsed, votes, availableVotes);
+        }
+
+        // [...]
+    }
+    ```
+
 - The replaying of the signature would result in consuming more of the user's voting weight, while keeping the proportion of the `Against`, `For` and `Abstain` votes the same
 
 ## Settings Can Be Changed During an Active Election
