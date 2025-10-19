@@ -1,3 +1,7 @@
+:root {
+  --logo-size: 2rem;
+}
+
 /* https://www.client9.com/using-font-awesome-icons-in-hugo/ */
 .inline-svg {
   display: inline-block;
@@ -5,4 +9,90 @@
   width: 1.15rem;
   top: 0.15rem;
   position: relative;
+}
+
+.logo-img {
+  height: var(--logo-size);
+  width: auto;
+  max-height: 100%;
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-toggle__input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.theme-toggle__track {
+  position: relative;
+  width: 3.25rem;
+  height: 1.65rem;
+  background: #bca16f;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.35rem;
+  box-sizing: border-box;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 0.22rem;
+  left: 0.22rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.theme-toggle__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.theme-toggle__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.theme-toggle__icon--moon {
+  opacity: 0.5;
+}
+
+.theme-toggle__input:checked + .theme-toggle__track {
+  background: #dcccafda;
+}
+
+.theme-toggle__input:checked + .theme-toggle__track .theme-toggle__thumb {
+  transform: translateX(1.65rem);
+}
+
+.theme-toggle__input:checked + .theme-toggle__track .theme-toggle__icon--moon {
+  opacity: 1;
+}
+
+.theme-toggle__input:checked + .theme-toggle__track .theme-toggle__icon--sun {
+  opacity: 0.4;
 }

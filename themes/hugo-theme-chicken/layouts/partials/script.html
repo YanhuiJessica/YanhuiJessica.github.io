@@ -1,4 +1,63 @@
 <script src="/js/feather.min.js"></script>
 <script>
   feather.replace()
+
+  /***** Light/Dark Mode Toggle *****/
+
+  const lightLinkId = 'theme-style-light'
+  const darkLinkId = 'theme-style-dark'
+  const storageKey = 'toggle-mode'
+  const defaultTheme = 'light'
+
+  const readStoredTheme = () => {
+    try {
+      const stored = window.localStorage.getItem(storageKey)
+      if (stored === 'light' || stored === 'dark') return stored
+    } catch (_) { /* ignore */ }
+    return null
+  }
+
+  const storeTheme = (theme) => {
+    try {
+      window.localStorage.setItem(storageKey, theme)
+    } catch (_) { /* ignore */ }
+  }
+
+  const applyTheme = (theme) => {
+    const lightLink = document.getElementById(lightLinkId)
+    const darkLink = document.getElementById(darkLinkId)
+    if (!lightLink || !darkLink) return
+    const isDark = theme === 'dark'
+    lightLink.disabled = isDark
+    darkLink.disabled = !isDark
+    document.documentElement.setAttribute('data-theme', theme)
+    storeTheme(theme)
+  }
+
+  const initToggle = () => {
+    const toggle = document.getElementById('data-theme-toggle')
+    if (!toggle) return
+
+    const label = toggle.closest('.theme-toggle')
+    const syncToggle = (theme) => {
+      const isDark = theme === 'dark'
+      toggle.checked = isDark
+      if (label) {
+        label.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode')
+      }
+    }
+
+    const currentTheme = readStoredTheme() || defaultTheme
+    syncToggle(currentTheme)
+
+    toggle.addEventListener('change', () => {
+      const nextTheme = toggle.checked ? 'dark' : 'light'
+      applyTheme(nextTheme)
+      syncToggle(nextTheme)
+    })
+  }
+
+  const initialTheme = readStoredTheme() || defaultTheme
+  applyTheme(initialTheme)
+  initToggle()
 </script>

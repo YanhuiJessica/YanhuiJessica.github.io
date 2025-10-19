@@ -1,14 +1,37 @@
 <div id="nav-border" class="container">
-    <nav id="nav" class="nav justify-content-center">
-        {{ range .Site.Menus.main }}
-        <a class="nav-link" href="{{ .URL }}">
-        {{ if .Pre }}
-        {{ $icon := printf "<i data-feather=\"%s\"></i> " .Pre | safeHTML }}
-        {{ $icon }}
-        {{ end }}
-        {{ $text := print .Name | safeHTML }}
-        {{ $text }}
-        </a>
-        {{ end }}
-    </nav>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+            <a href="{{ "/" | relLangURL }}" class="d-inline-flex align-items-center my-3 my-lg-2">
+            {{ with .Site.Params.logo }}
+            <img src="{{ . | relURL }}" alt="{{ $.Site.Title }}" class="logo-img">
+            {{ else }}
+            {{ $.Site.Title }}
+            {{ end }}
+            </a>
+
+            <div class="d-flex align-items-center gap-2 ms-md-auto">
+                <nav id="nav" class="nav d-flex align-items-center gap-2">
+                    {{ range .Site.Menus.main }}
+                    <a class="nav-link" href="{{ .URL }}">
+                    {{ if .Pre }}
+                    {{ $icon := printf "<i data-feather=\"%s\"></i> " .Pre | safeHTML }}
+                    {{ $icon }}
+                    {{ end }}
+                    {{ $text := print .Name | safeHTML }}
+                    {{ $text }}
+                    </a>
+                    {{ end }}
+                </nav>
+
+                <label class="theme-toggle" aria-label="Toggle dark mode">
+                    <input class="theme-toggle__input" type="checkbox" id="data-theme-toggle">
+                    <span class="theme-toggle__track">
+                        <span class="theme-toggle__icon theme-toggle__icon--moon"><i data-feather="moon"></i></span>
+                        <span class="theme-toggle__thumb"></span>
+                        <span class="theme-toggle__icon theme-toggle__icon--sun"><i data-feather="sun"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
 </div>

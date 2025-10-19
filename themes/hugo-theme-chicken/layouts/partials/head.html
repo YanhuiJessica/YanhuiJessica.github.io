@@ -1,12 +1,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link id="theme-style-light" rel="stylesheet" href="/css/light.css">
+    <link disabled id="theme-style-dark" rel="stylesheet" href="/css/dark.css">
     {{ partial "mathjax.html" . }}
     {{ partial "mermaid.html" . }}
-    {{ $title := print .Site.Title " | " .Title }}
-    {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
+    {{ $title := print .Title " | " .Site.Title }}
+    {{ if .IsHome }}{{ $title = print "Home | " .Site.Title }}{{ end }}
     <title>{{ $title }}</title>
     <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Summary }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}">
 </head>
