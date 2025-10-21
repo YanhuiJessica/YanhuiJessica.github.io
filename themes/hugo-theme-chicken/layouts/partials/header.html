@@ -1,7 +1,7 @@
 <div id="nav-border" class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8 d-flex align-items-center justify-content-between gap-2 flex-wrap">
-            <a href="{{ "/" | relLangURL }}" class="d-inline-flex align-items-center my-3 my-lg-2">
+            <a href="{{ "/" | relLangURL }}" class="nav-link d-inline-flex align-items-center my-3 my-lg-2">
             {{ with .Site.Params.logo }}
             <img src="{{ . | relURL }}" alt="{{ $.Site.Title }}" class="logo-img">
             {{ else }}

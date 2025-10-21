@@ -2,13 +2,16 @@
   --logo-size: 2rem;
 }
 
-/* https://www.client9.com/using-font-awesome-icons-in-hugo/ */
 .inline-svg {
   display: inline-block;
   height: 1.15rem;
   width: 1.15rem;
   top: 0.15rem;
   position: relative;
+}
+
+body {
+  font-family: Courier, monospace;
 }
 
 .logo-img {
