@@ -1,1 +1,1 @@
-<p class="footer text-center">© {{ now.Year }} {{ .Site.Params.author }}. All rights reserved.</p>
+<p class="footer text-center">© {{ now.Year }} {{ if .Site.Params.author }}{{ .Site.Params.author }}{{ else }}Hugo Theme Chicken{{ end }}. All rights reserved.</p>
