@@ -42,7 +42,7 @@ Affected versions | Fixed
 
 - The `castVoteWithReasonAndParamsBySig()` and `castVoteBySig()` functions do not track the signature's nonce
 
-    ```js
+    ```solidity
     function castVoteBySig(
         ...
     ) public virtual override returns (uint256) {
@@ -81,7 +81,7 @@ Affected versions | Fixed
 
 - Meanwhile, the `_countVote` function allows a voter to vote multiple times
 
-    ```js
+    ```solidity
     function _castVote(
         uint256 proposalId,
         address account,
@@ -129,7 +129,7 @@ Affected versions | Fixed
 
 > This makes the voting unfair and the results unreliable as the owner can control the voting power during the election.
 
-```js
+```solidity
 function setFullWeightDuration(uint256 newFullWeightDuration) public onlyGovernance {
     if (newFullWeightDuration > votingPeriod()) {
         revert FullWeightDurationGreaterThanVotingPeriod(newFullWeightDuration, votingPeriod());
@@ -171,7 +171,7 @@ Since it's a privileged function, fix is just add comments informing the caller 
     - `dateTimeToTimestamp()` doesn't check if the date time is valid. `DateTimeLib` provides `isSupportedDateTime()` function to check
 - For example, if `firstNominationStartDate` is `2024-08-31T01:00`. It's expected to create election again 6 months from that, i.e. `2025-02-28T01:00`. But in fact, the result of `electionToTimestamp()` will be `2025-03-03T01:00`, which is 4 days away from the expected date
 
-```js
+```solidity
 function createElection() external returns (uint256 proposalId) {
     ...
     // each election has a deterministic start time
@@ -208,7 +208,7 @@ function electionToTimestamp(uint256 electionIndex) public view returns (uint256
 
 - The `SecurityCouncilMemberRemovalGovernor` contract inherits `GovernorUpgradeable` and `EIP712Upgradeable` contracts but does not invoke their individual initializers during its own initialization
 
-    ```js
+    ```solidity
     contract SecurityCouncilMemberRemovalGovernor is
         Initializable,
         GovernorUpgradeable,
@@ -240,7 +240,7 @@ function electionToTimestamp(uint256 electionIndex) public view returns (uint256
 - In `GovernorUpgradeable` the `_name` storage variable is never initialized and the `name()` function returns an empty string
 - In `EIP712Upgradeable`, `_HASHED_NAME` and `_HASHED_VERSION` are used in the `castVoteBySig()` and `castVoteWithReasonAndParamsBySig()` functions of `SecurityCouncilMemberRemovalGovernor`
 
-```js
+```solidity
 function __Governor_init(string memory name_) internal onlyInitializing {
     __EIP712_init_unchained(name_, version());
     __Governor_init_unchained(name_);
@@ -266,7 +266,7 @@ function __EIP712_init_unchained(string memory name, string memory version) inte
 - **Fixed** Insufficient cohorts verification during initialization
     - The `firstCohort` and `secondCohort` could be of any size; one member could end up in both cohorts; duplicates in both cohorts
 
-    ```js
+    ```solidity
     if (_firstCohort.length != _secondCohort.length) {  // only ensure they are the same length
         revert CohortLengthMismatch(_firstCohort, _secondCohort);
     }

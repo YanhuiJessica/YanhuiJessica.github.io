@@ -25,7 +25,7 @@ summary: The basic knowledge of diamond proxy pattern.
 
 回调函数根据 `msg.sig` 决定切面地址
 
-```js
+```solidity
 // example
 // Find facet for function that is called and execute the
 // function if a facet is found and return any value.
@@ -67,7 +67,7 @@ fallback() external payable {
 - 在一个文件中定义结构体 `AppStorage`，其中包含所有应用相关且计划在切面间共享的状态变量
 - 切面中引入 `AppStorage` 结构体并声明一个 `AppStorage` 状态变量 `s`
 
-    ```js
+    ```solidity
     // example
     import "./AppStorage.sol";
 
@@ -82,7 +82,7 @@ fallback() external payable {
 
 Diamonds 必须实现 `IDiamond` 接口
 
-```js
+```solidity
 interface IDiamond {
     enum FacetCutAction {Add, Replace, Remove}
 
@@ -102,7 +102,7 @@ interface IDiamond {
 - Diamonds 包含函数选择器到切面地址的映射，函数的添加、替换或删除通过修改该映射实现
 - 若需要在部署后修改函数选择器的映射，则必须实现 `IDiamondCut` 接口
 
-```js
+```solidity
 interface IDiamondCut is IDiamond {
     /// @notice Add/replace/remove any number of functions and optionally execute
     ///         a function with delegatecall
@@ -124,7 +124,7 @@ Diamonds 通过实现 `IDiamondLoupe` 接口来支持切面和函数自省
 
 ### `IDiamondLoupe` Interface
 
-```js
+```solidity
 interface IDiamondLoupe {
     struct Facet {
         address facetAddress;

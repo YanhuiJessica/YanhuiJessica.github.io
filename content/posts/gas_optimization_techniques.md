@@ -19,7 +19,7 @@ summary: Some tested gas optimization techniques for Solidity.
 - 在确保不会溢出的情况下，将循环量自增放在 `unchecked` 块中（牺牲了可读性）
     - 注：v0.8.22 及之后版本优化了对循环自增量的溢出检查
 
-    ```js
+    ```solidity
     for (uint i; i < 10;) {
         unchecked {
             i++;

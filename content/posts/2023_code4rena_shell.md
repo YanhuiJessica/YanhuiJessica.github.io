@@ -13,7 +13,7 @@ summary: Notes on Shell Protocol findings and analysis report.
 - The `EvolvingProteus` contract only contains view functions
 - Six external functions: `swapGivenInputAmount()`, `swapGivenOutputAmount()`, `depositGivenInputAmount()`, `depositGivenOutputAmount()`, `withdrawGivenOutputAmount()`, `withdrawGivenInputAmount()`
 
-    ```js
+    ```solidity
     // Required arguments example
     function swapGivenInputAmount(
         uint256 xBalance,

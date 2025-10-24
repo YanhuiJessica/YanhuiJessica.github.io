@@ -21,7 +21,7 @@ Users send `UserOperation` objects to a dedicated user operation mempool (differ
 
 - **UserOperation** an ABI-encoded structure that describes a *transaction* to be sent on behalf of a user
 
-    ```js
+    ```solidity
     struct UserOperation {
         address sender; // the account contract making the operation
         uint256 nonce;  // anti-replay parameter
@@ -39,7 +39,7 @@ Users send `UserOperation` objects to a dedicated user operation mempool (differ
 
 - **EntryPoint** a singleton contract to execute bundles of UserOperations
 
-    ```js
+    ```solidity
     function handleOps(UserOperation[] calldata ops, address payable beneficiary);
 
     // can validate multiple ops with one signature
@@ -60,7 +60,7 @@ Users send `UserOperation` objects to a dedicated user operation mempool (differ
 
 ### Account
 
-```js
+```solidity
 interface IAccount {
   function validateUserOp ( // will be called by EntryPoint.handleOps()
     UserOperation calldata userOp,

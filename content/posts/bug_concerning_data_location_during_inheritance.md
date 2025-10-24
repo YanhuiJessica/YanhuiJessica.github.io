@@ -21,7 +21,7 @@ math: true
 
 以下示例，漏洞发生在合约 `X` 中。
 
-```js
+```solidity
 abstract contract I {
     // The base contract uses "calldata"
     function f(uint[] calldata x) virtual internal;

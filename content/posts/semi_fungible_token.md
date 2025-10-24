@@ -21,7 +21,7 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
 
 - Every ERC3525 compliant contract must implement the ERC3525, **ERC721** and ERC165 interfaces
 
-    ```js
+    ```solidity
     interface IERC3525 is IERC165, IERC721 {
         event TransferValue(uint256 indexed _fromTokenId, uint256 indexed _toTokenId, uint256 _value);
         event ApprovalValue(uint256 indexed _tokenId, address indexed _operator, uint256 _value);
@@ -46,7 +46,7 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
 
 - ERC3525 Token Receiver
 
-    ```js
+    ```solidity
     interface IERC3525Receiver {
         function onERC3525Received(address _operator, uint256 _fromTokenId, uint256 _toTokenId, uint256 _value, bytes calldata _data) external returns (bytes4);
     }
@@ -54,7 +54,7 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
 
 - `ERC3525SlotEnumerable` allows to publish the full list of `SLOT`s and make them discoverable
 
-    ```js
+    ```solidity
     interface IERC3525SlotEnumerable is IERC3525 {
         function slotCount() external view returns (uint256);
         function slotByIndex(uint256 _index) external view returns (uint256);
@@ -68,7 +68,7 @@ summary: A specification where ERC721 compatible tokens with the same SLOT and d
 
 - `ERC3525SlotApprovable` allows to support approval for slots, which allows an operator to manage one's tokens with the same slot
 
-    ```js
+    ```solidity
     interface IERC3525SlotApprovable is IERC3525 {
         event ApprovalForSlot(address indexed _owner, uint256 indexed _slot, address indexed _operator, bool _approved);
 

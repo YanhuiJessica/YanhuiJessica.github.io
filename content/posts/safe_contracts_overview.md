@@ -43,7 +43,7 @@ flowchart TD
     - If payment is not 0, `handlePayment()`
 - `execTransaction()` Verifies the signature and executes a transaction. If the guard is set, it'll check before and after executing the transaction
 
-    ```js
+    ```solidity
     function execTransaction(
         address to,
         uint256 value,

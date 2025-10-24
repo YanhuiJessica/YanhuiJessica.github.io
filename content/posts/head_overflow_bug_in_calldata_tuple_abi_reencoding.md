@@ -22,7 +22,7 @@ math: true
 
 - tuple 的 ABI 编码包含两部分，静态编码的 *head* 以及动态编码的 *tail*。*head* 中包含静态元素以及动态元素在 *tail* 中的偏移
   
-```js
+```solidity
 contract D {
     function f(bool a, bytes calldata b, uint[2] calldata c) public pure
         returns (bool, bytes calldata, uint[2] calldata) { 

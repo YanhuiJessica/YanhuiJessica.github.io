@@ -15,7 +15,7 @@ summary: The basic knowledge of namespaced storage pattern.
 
 ## Example
 
-```js
+```solidity
 pragma solidity ^0.8.20;
 
 contract Example {
