@@ -6,8 +6,6 @@
 
   const lightLinkId = 'theme-style-light'
   const darkLinkId = 'theme-style-dark'
-  const githubLightLinkId = 'github-theme-style-light'
-  const githubDarkLinkId = 'github-theme-style-dark'
   const storageKey = 'toggle-mode'
   const defaultTheme = 'light'
 
@@ -28,16 +26,16 @@
   const applyTheme = (theme) => {
     const lightLink = document.getElementById(lightLinkId)
     const darkLink = document.getElementById(darkLinkId)
-    const githubLightLink = document.getElementById(githubLightLinkId)
-    const githubDarkLink = document.getElementById(githubDarkLinkId)
-    if (!lightLink || !darkLink || !githubLightLink || !githubDarkLink) return
+    if (!lightLink || !darkLink) return
     const isDark = theme === 'dark'
     lightLink.disabled = isDark
     darkLink.disabled = !isDark
-    githubLightLink.disabled = isDark
-    githubDarkLink.disabled = !isDark
+    const prevTheme = document.documentElement.getAttribute('data-theme')
     document.documentElement.setAttribute('data-theme', theme)
     storeTheme(theme)
+    if (prevTheme !== theme) {
+      document.dispatchEvent(new CustomEvent('themeChange', { detail: theme }))
+    }
   }
 
   const initToggle = () => {

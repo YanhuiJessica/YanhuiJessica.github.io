@@ -1,13 +1,275 @@
-{{ if .Params.mermaid }}
-<script type="module">  
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'; 
-    mermaid.initialize({ startOnLoad: true });  
+{{ if or .Params.mermaid (.Site.Params.mermaid) }}
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'
+    const svgPanZoomModule = await import('https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js')
+    const svgPanZoom = svgPanZoomModule.default || window.svgPanZoom
+
+    const getThemeContext = () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+        return {
+            theme,
+            isDark: theme === 'dark',
+            selector: theme === 'dark' ? '.mermaid-dark' : '.mermaid'
+        }
+    }
+
+    const configureSvgElement = (svg) => {
+        svg.removeAttribute('width')
+        svg.removeAttribute('height')
+        svg.style.width = '100%'
+        svg.style.height = 'auto'
+        svg.style.touchAction = 'none'
+        svg.style.userSelect = 'none'
+    }
+
+    const createPanZoomInstance = (svg) => {
+        if (typeof svgPanZoom !== 'function') {
+            console.warn('svgPanZoom is unavailable')
+            return null
+        }
+
+        const instance = svgPanZoom(svg, {
+            zoomEnabled: true,
+            controlIconsEnabled: false,
+            fit: true,
+            center: true,
+            panEnabled: true,
+            customEventsHandler: {
+                haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
+                init: (options) => {
+                    let lastTouchDistance = 0
+                    const getDistance = (touches) => {
+                        const [a, b] = touches
+                        return Math.hypot(b.pageX - a.pageX, b.pageY - a.pageY)
+                    }
+
+                    options.svgElement.addEventListener('touchmove', (event) => {
+                        if (event.touches.length === 2) {
+                            event.preventDefault()
+                            const currentDistance = getDistance(event.touches)
+                            if (lastTouchDistance) {
+                                const zoomFactor = currentDistance / lastTouchDistance
+                                options.instance.zoomBy(zoomFactor)
+                            }
+                            lastTouchDistance = currentDistance
+                        }
+                    }, { passive: false })
+
+                    options.svgElement.addEventListener('touchend', () => {
+                        lastTouchDistance = 0
+                    })
+                },
+                destroy: () => {}
+            }
+        })
+
+        const ensureFit = () => {
+            instance.resize?.()
+            instance.updateBBox?.()
+            instance.fit?.()
+            instance.center?.()
+        }
+
+        requestAnimationFrame(ensureFit)
+
+        return { instance, ensureFit }
+    }
+
+    const refreshResizeHandlers = (container, ensureFit) => {
+        container._mermaidResizeObserver?.disconnect?.()
+        container._mermaidResizeObserver = undefined
+
+        if (container._mermaidWindowResizeHandler) {
+            window.removeEventListener('resize', container._mermaidWindowResizeHandler)
+            container._mermaidWindowResizeHandler = undefined
+        }
+
+        if ('ResizeObserver' in window) {
+            const resizeObserver = new ResizeObserver(() => ensureFit())
+            resizeObserver.observe(container)
+            container._mermaidResizeObserver = resizeObserver
+        } else {
+            const onWindowResize = () => ensureFit()
+            window.addEventListener('resize', onWindowResize)
+            container._mermaidWindowResizeHandler = onWindowResize
+        }
+    }
+
+    const refreshWheelHandler = (container, instance) => {
+        if (container._mermaidWheelHandler) {
+            container.removeEventListener('wheel', container._mermaidWheelHandler)
+        }
+
+        const wheelHandler = (event) => {
+            if (event.ctrlKey) return
+            event.preventDefault()
+            const zoomDirection = event.deltaY < 0 ? 1 : -1
+            instance.zoomBy(zoomDirection > 0 ? 1.1 : 0.9)
+        }
+
+        container.addEventListener('wheel', wheelHandler, { passive: false })
+        container._mermaidWheelHandler = wheelHandler
+    }
+
+    const ensureResetButton = (container, instance, ensureFit) => {
+        let resetButton = container.querySelector('.mermaid-reset')
+        if (!resetButton) {
+            resetButton = document.createElement('button')
+            resetButton.type = 'button'
+            resetButton.className = 'mermaid-reset'
+            resetButton.setAttribute('aria-label', 'Reset diagram view')
+            resetButton.innerHTML = '<i data-feather="rotate-ccw" aria-hidden="true"></i>'
+            container.appendChild(resetButton)
+            if (window.feather?.replace) {
+                window.feather.replace()
+            }
+        }
+
+        resetButton.onclick = () => {
+            instance.reset?.()
+            ensureFit()
+        }
+    }
+
+    const bindDragInteractivity = (svg, container) => {
+        if (svg.dataset.mermaidInteractivityBound === 'true') return
+
+        const setDragging = (active) => {
+            container.classList.toggle('mermaid-dragging', active)
+        }
+
+        svg.addEventListener('mousedown', () => {
+            setDragging(true)
+            const handleMouseUp = () => {
+                setDragging(false)
+                window.removeEventListener('mouseup', handleMouseUp)
+            }
+            window.addEventListener('mouseup', handleMouseUp)
+        })
+
+        svg.addEventListener('mouseleave', () => setDragging(false))
+
+        svg.addEventListener('touchstart', () => setDragging(true), { passive: true })
+        svg.addEventListener('touchend', () => setDragging(false))
+        svg.addEventListener('touchcancel', () => setDragging(false))
+
+        svg.dataset.mermaidInteractivityBound = 'true'
+    }
+
+    const teardownPanZoomInstance = (container) => {
+        if (container._mermaidPanZoomInstance) {
+            container._mermaidPanZoomInstance.destroy?.()
+            container._mermaidPanZoomInstance = undefined
+        }
+    }
+
+    const renderMermaid = async () => {
+        const { theme, isDark, selector } = getThemeContext()
+
+        mermaid.initialize({ startOnLoad: false, darkMode: isDark, theme })
+        await mermaid.run({ querySelector: selector })
+
+        document.querySelectorAll(selector + ' svg').forEach((svg) => {
+            const container = svg.closest('.mermaid-container')
+            if (!container) return
+
+            teardownPanZoomInstance(container)
+            configureSvgElement(svg)
+            container.classList.remove('mermaid-dragging')
+
+            const panZoomState = createPanZoomInstance(svg)
+            if (!panZoomState) return
+
+            container._mermaidPanZoomInstance = panZoomState.instance
+
+            refreshResizeHandlers(container, panZoomState.ensureFit)
+            refreshWheelHandler(container, panZoomState.instance)
+            ensureResetButton(container, panZoomState.instance, panZoomState.ensureFit)
+            bindDragInteractivity(svg, container)
+        })
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderMermaid, { once: true })
+    } else {
+        renderMermaid()
+    }
+
+    document.addEventListener('themeChange', () => renderMermaid())
 </script>
-<style>  
-    /* Set svg to center */  
-    .mermaid svg {  
-        display: block;  
-        margin: auto;  
-    } 
+<style>
+    .mermaid-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        margin: 1.5rem auto;
+
+        .mermaid-dark {
+            display: none;
+        }
+
+        [data-theme="dark"] & {
+            .mermaid {
+            display: none;
+            }
+            .mermaid-dark {
+            display: block;
+            }
+        }
+    }
+
+    .mermaid-container .svg-pan-zoom_viewport > svg,
+    .mermaid-container svg {
+        display: block;
+        width: 100% !important;
+    }
+
+    .mermaid-container svg,
+    .mermaid-container .svg-pan-zoom_viewport {
+        cursor: grab;
+    }
+
+    .mermaid-container.mermaid-dragging svg,
+    .mermaid-container.mermaid-dragging .svg-pan-zoom_viewport {
+        cursor: grabbing;
+    }
+
+    .mermaid-container .mermaid-reset {
+        position: absolute;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border: 1px solid gray;
+        border-radius: 9999px;
+        background: rgba(239, 242, 245, 0.5);
+        color: black;
+        cursor: pointer;
+        transition: 0.15s ease;
+    }
+
+    [data-theme="dark"] .mermaid-container .mermaid-reset {
+        background: rgba(89, 92, 95, 0.5);
+        color: #faf6f0;
+    }
+
+    .mermaid-container .mermaid-reset:hover {
+        transform: translateY(-2px);
+        background: rgba(239, 242, 245, 0.9);
+    }
+
+    [data-theme="dark"] .mermaid-container .mermaid-reset:hover {
+        background: rgba(58, 60, 62, 0.9);
+    }
+
+    .mermaid-container .mermaid-reset svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        stroke-width: 2.2;
+    }
+
 </style>
 {{ end }}

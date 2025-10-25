@@ -1,3 +1,8 @@
-<pre class="mermaid">
-    {{- .Inner | safeHTML }}
-</pre>
+<div class="mermaid-container">
+  <pre class="mermaid">
+    {{ .Inner | htmlEscape | safeHTML }}
+  </pre>
+  <pre class="mermaid-dark">
+    {{ .Inner | htmlEscape | safeHTML }}
+  </pre>
+</div>
