@@ -84,6 +84,37 @@ body {
   opacity: 0.5;
 }
 
+.highlight {
+  background: inherit;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.highlight .chroma {
+  min-width: 100%;
+  display: inline-block;
+}
+
+.highlight .lntable {
+  display: inline-flex;
+  width: auto;
+}
+
+.highlight .lntd:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: inherit;
+}
+
+.highlight pre {
+  margin: 0;
+}
+
+.highlight .lntd + .lntd {
+  min-width: 100%;
+}
+
 .theme-toggle__input:checked + .theme-toggle__track {
   background: #dcccafda;
 }
