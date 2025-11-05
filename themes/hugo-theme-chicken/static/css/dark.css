@@ -10,3 +10,16 @@ body {
 .nav-link:hover {
     color: #ffebb4e5;
 }
+
+.tag-btn {
+  color: #faf6f0;
+  border-color: #faf6f0;
+}
+
+.tag-btn:hover,
+.tag-btn:focus {
+  background-color: #faf6f0;
+  border-color: #faf6f0;
+  color: #333;
+  text-decoration: none;
+}
