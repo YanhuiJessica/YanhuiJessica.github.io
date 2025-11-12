@@ -23,3 +23,9 @@ body {
   color: #333;
   text-decoration: none;
 }
+
+article {
+  --table-border-color: rgba(250, 246, 240, 0.45);
+  --table-header-bg: rgba(250, 246, 240, 0.12);
+  --table-row-alt-bg: rgba(250, 246, 240, 0.06);
+}

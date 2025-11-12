@@ -130,3 +130,34 @@ body {
 .theme-toggle__input:checked + .theme-toggle__track .theme-toggle__icon--sun {
   opacity: 0.4;
 }
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+}
+
+.table-wrapper table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  border: 1px solid var(--table-border-color, #999);
+  padding: 0.6rem 0.75rem;
+  vertical-align: top;
+}
+
+.table-wrapper th {
+  background-color: var(--table-header-bg, rgba(0, 0, 0, 0.05));
+  font-weight: 600;
+}
+
+.table-wrapper tr:nth-child(even) td {
+  background-color: var(--table-row-alt-bg, rgba(0, 0, 0, 0.03));
+}

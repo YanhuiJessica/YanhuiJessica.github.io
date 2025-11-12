@@ -22,3 +22,9 @@ body {
     color: #faf6f0;
     text-decoration: none;
 }
+
+article {
+    --table-border-color: #665c61;
+    --table-header-bg: rgba(102, 92, 97, 0.15);
+    --table-row-alt-bg: rgba(102, 92, 97, 0.08);
+}
