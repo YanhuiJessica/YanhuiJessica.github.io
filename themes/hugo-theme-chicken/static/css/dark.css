@@ -3,6 +3,14 @@ body {
   color: #faf6f0;
 }
 
+a {
+    color: #dcccafda;
+}
+
+a:hover {
+    color: #ffebb4e5;
+}
+
 .nav-link {
     color: #dcccafda;
 }

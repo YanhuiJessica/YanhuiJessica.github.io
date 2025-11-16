@@ -2,6 +2,14 @@ body {
     background-color: #faf6f0 !important;
 }
 
+a {
+    color: #8a7855;
+}
+
+a:hover {
+    color: #5a5156;
+}
+
 .nav-link {
     color: #bca16f;
 }
