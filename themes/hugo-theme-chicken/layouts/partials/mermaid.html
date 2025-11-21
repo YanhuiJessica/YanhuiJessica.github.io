@@ -14,12 +14,23 @@
     }
 
     const configureSvgElement = (svg) => {
-        svg.removeAttribute('width')
-        svg.removeAttribute('height')
-        svg.style.width = '100%'
-        svg.style.height = 'auto'
+        // TODO: dynamic sizing
         svg.style.touchAction = 'none'
         svg.style.userSelect = 'none'
+    }
+
+    const positionResetButton = (container, svg, button) => {
+        if (!container || !svg || !button) return
+        const svgRect = svg.getBoundingClientRect()
+        const containerRect = container.getBoundingClientRect()
+        if (!svgRect.width || !svgRect.height || !containerRect.width || !containerRect.height) return
+        const basePadding = 12
+        const blankRight = Math.max(containerRect.right - svgRect.right, 0)
+        const blankBottom = Math.max(containerRect.bottom - svgRect.bottom, 0)
+        const right = blankRight + basePadding
+        const bottom = blankBottom + basePadding
+        button.style.right = `${right}px`
+        button.style.bottom = `${bottom}px`
     }
 
     const createPanZoomInstance = (svg) => {
@@ -129,6 +140,8 @@
             instance.reset?.()
             ensureFit()
         }
+
+        return resetButton
     }
 
     const bindDragInteractivity = (svg, container) => {
@@ -182,9 +195,17 @@
 
             container._mermaidPanZoomInstance = panZoomState.instance
 
-            refreshResizeHandlers(container, panZoomState.ensureFit)
+            let resetButton
+            const ensureLayout = () => {
+                panZoomState.ensureFit()
+                positionResetButton(container, svg, resetButton)
+            }
+
+            resetButton = ensureResetButton(container, panZoomState.instance, ensureLayout)
+            ensureLayout()
+
+            refreshResizeHandlers(container, ensureLayout)
             refreshWheelHandler(container, panZoomState.instance)
-            ensureResetButton(container, panZoomState.instance, panZoomState.ensureFit)
             bindDragInteractivity(svg, container)
         })
     }
@@ -222,6 +243,8 @@
     .mermaid-container svg {
         display: block;
         width: 100% !important;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .mermaid-container svg,
