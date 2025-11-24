@@ -13,8 +13,27 @@
         }
     }
 
+    const getSvgFontSize = (svg) => {
+        const sampleText = svg.querySelector('text')
+        if (!sampleText) return null
+
+        const computed = window.getComputedStyle(sampleText)
+        const computedSize = parseFloat(computed?.fontSize)
+        if (Number.isFinite(computedSize) && computedSize > 0) {
+            return computedSize
+        }
+
+        return null
+    }
+
     const configureSvgElement = (svg) => {
-        // TODO: dynamic sizing
+        const fontSizePx = getSvgFontSize(svg)
+        if (fontSizePx) {
+            svg.style.minHeight = `16rem`
+        } else {
+            svg.style.minHeight = '10rem'
+        }
+
         svg.style.touchAction = 'none'
         svg.style.userSelect = 'none'
     }
@@ -223,7 +242,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 0.5rem;
-        margin: 1.5rem auto;
+        margin: 1rem auto;
 
         .mermaid-dark {
             display: none;
