@@ -1,6 +1,6 @@
 {{ define "main" }}
 <h1>{{ .Title }}</h1>
-{{ range .Pages.ByPublishDate.Reverse }}
+{{ range .Paginator.Pages }}
 <p>
     <h3><a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
     {{ partial "metadata.html" . }}
@@ -9,4 +9,5 @@
     </a>
 </p>
 {{ end }}
+{{ partial "pagination.html" . }}
 {{ end }}
