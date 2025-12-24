@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="container my-5">
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-10 col-lg-8">
+			<h1>{{ .Title }}</h1>
+			<div class="d-flex flex-wrap gap-2 mt-4">
+				{{ range .Data.Terms.Alphabetical }}
+				{{ $termPage := .Page }}
+				<a class="btn btn-sm btn-outline-dark tag-btn" href="{{ $termPage.RelPermalink }}">
+					{{ .Term }}
+					<span class="badge tag-count ms-1">{{ .Count }}</span>
+				</a>
+				{{ end }}
+			</div>
+		</div>
+	</div>
+</div>
+{{ end }}

@@ -32,6 +32,11 @@ a:hover {
   text-decoration: none;
 }
 
+.tag-count {
+  background-color: #faf6f0d1;
+  color: #333;
+}
+
 article {
   --table-border-color: rgba(250, 246, 240, 0.45);
   --table-header-bg: rgba(250, 246, 240, 0.12);

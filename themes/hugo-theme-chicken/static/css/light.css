@@ -23,6 +23,11 @@ a:hover {
     border-color: #665c61;
 }
 
+.tag-count {
+    background-color: #665c61be;
+    color: #faf6f0;
+}
+
 .tag-btn:hover,
 .tag-btn:focus {
     background-color: #665c61;
