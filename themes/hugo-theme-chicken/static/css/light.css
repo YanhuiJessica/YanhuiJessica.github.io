@@ -1,5 +1,12 @@
 body {
     background-color: #faf6f0 !important;
+    
+    --card-bg: #fffefc68;
+    --card-border: rgba(102, 92, 97, 0.18);
+    --card-shadow: 0 10px 25px rgba(102, 92, 97, 0.12);
+    --card-shadow-hover: 0 14px 35px rgba(102, 92, 97, 0.16);
+    --card-thumb-bg: rgba(102, 92, 97, 0.05);
+    --card-text-muted: rgba(102, 92, 97, 0.78);
 }
 
 a {

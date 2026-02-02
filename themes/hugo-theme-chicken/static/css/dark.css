@@ -1,6 +1,13 @@
 body {
   background-color: #333 !important;
   color: #faf6f0;
+
+  --card-bg: rgba(250, 246, 240, 0.12);
+  --card-border: rgba(250, 246, 240, 0.14);
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  --card-shadow-hover: 0 14px 35px rgba(0, 0, 0, 0.45);
+  --card-thumb-bg: rgba(250, 246, 240, 0.06);
+  --card-text-muted: rgba(250, 246, 240, 0.74);
 }
 
 a {

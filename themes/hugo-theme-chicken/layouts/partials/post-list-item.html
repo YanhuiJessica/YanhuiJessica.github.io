@@ -1,0 +1,85 @@
+{{- $thumb := "" -}}
+
+{{- with .Params.thumbnail -}}
+  {{- $thumb = . -}}
+{{- end -}}
+{{- if not $thumb -}}
+  {{- with .Params.cover -}}
+    {{- $thumb = . -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $thumb -}}
+  {{- with .Params.image -}}
+    {{- $thumb = . -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $thumb -}}
+  {{- with .Params.images -}}
+    {{- if (reflect.IsSlice .) -}}
+      {{- $thumb = (index . 0) -}}
+    {{- else -}}
+      {{- $thumb = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Prefer first image resource in bundle if no explicit param */ -}}
+{{- if not $thumb -}}
+  {{- $imgs := .Resources.ByType "image" -}}
+  {{- if gt (len $imgs) 0 -}}
+    {{- $thumb = (index $imgs 0).RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Extract from content as fallback */ -}}
+{{- if not $thumb -}}
+  {{- $raw := .RawContent -}}
+  {{- $md := (findRE `!\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)` $raw 1) -}}
+  {{- if gt (len $md) 0 -}}
+    {{- $m := index $md 0 -}}
+    {{- $thumb = (replaceRE `^!\[[^\]]*\]\(([^)\s]+).*$` `$1` $m) -}}
+  {{- else -}}
+    {{- $html := (findRE `<img[^>]+src=["']([^"']+)["'][^>]*>` $raw 1) -}}
+    {{- if gt (len $html) 0 -}}
+      {{- $m := index $html 0 -}}
+      {{- $thumb = (replaceRE `^.*src=["']([^"']+)["'].*$` `$1` $m) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Resolve relative bundle images to resource URL when possible */ -}}
+{{- if and $thumb (not (hasPrefix $thumb "http://")) (not (hasPrefix $thumb "https://")) (not (hasPrefix $thumb "//")) -}}
+  {{- if not (hasPrefix $thumb "/") -}}
+    {{- $res := .Resources.GetMatch $thumb -}}
+    {{- if not $res -}}
+      {{- $res = .Resources.GetMatch (printf "*%s" $thumb) -}}
+    {{- end -}}
+    {{- if $res -}}
+      {{- $thumb = $res.RelPermalink -}}
+    {{- else -}}
+      {{- $thumb = (relURL $thumb) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<article class="post-card {{ if $thumb }}post-card--has-thumb{{ else }}post-card--no-thumb{{ end }}">
+  {{- if $thumb -}}
+  <a class="post-card__thumb" href="{{ .RelPermalink }}" aria-label="{{ .Title }}">
+    <img loading="lazy" src="{{ $thumb }}" alt="" />
+  </a>
+  {{- end -}}
+
+  <div class="post-card__body">
+    <h3 class="post-card__title">
+      <a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h3>
+
+    <div class="post-card__meta">
+      {{ partial "metadata.html" . }}
+    </div>
+
+    <a class="post-card__summary" href="{{ .RelPermalink }}">
+      <p>{{ .Summary | plainify | truncate 150 }}</p>
+    </a>
+  </div>
+</article>
