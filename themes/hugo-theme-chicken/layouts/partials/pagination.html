@@ -1,0 +1,183 @@
+{{- $p := .Paginator -}}
+{{- if and $p (gt $p.TotalPages 1) -}}
+  {{- $current := $p.PageNumber -}}
+  {{- $total := $p.TotalPages -}}
+  {{- $maxDist := 4 -}}
+  {{- $step := div 100 $maxDist -}}
+  {{- $edgeFirst := sub $current 1 -}}
+  {{- $edgeLast := sub $p.TotalPages $current -}}
+  {{- $window := 2 -}}
+
+  {{- $start := sub $current $window -}}
+  {{- if lt $start 2 -}}
+    {{- $start = 2 -}}
+  {{- end -}}
+  {{- $end := add $current $window -}}
+  {{- $lastMiddle := sub $total 1 -}}
+  {{- if gt $end $lastMiddle -}}
+    {{- $end = $lastMiddle -}}
+  {{- end -}}
+
+  <nav class="pagination-dots" aria-label="Pagination">
+    <ul class="pagination-dots__list">
+      {{- /* First / Prev */ -}}
+      {{- /* < uses edgeFirst (how far from start): page 1 -> lightest, near end -> deepest */ -}}
+      {{- /* |< always one step farther than < */ -}}
+      {{- $dPrev := cond (gt $edgeFirst $maxDist) $maxDist $edgeFirst -}}
+      {{- $mixPrev := mul $dPrev $step -}}
+      {{- $dFirst := add $dPrev 1 -}}
+      {{- $dFirst = cond (gt $dFirst $maxDist) $maxDist $dFirst -}}
+      {{- $mixFirst := mul $dFirst $step -}}
+      {{- if $p.HasPrev -}}
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <a class="pagination-dots__link" href="{{ $p.First.URL }}" style="--pager-mix: {{ $mixFirst }}%; --pager-scale: 0.84; --pager-scale-hover: 0.98;" aria-label="First page">|&lt;</a>
+        </li>
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <a class="pagination-dots__link" href="{{ $p.Prev.URL }}" style="--pager-mix: {{ $mixPrev }}%; --pager-scale: 0.97; --pager-scale-hover: 1.08;" aria-label="Previous page">&lt;</a>
+        </li>
+      {{- else -}}
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <span class="pagination-dots__link is-disabled" style="--pager-mix: {{ $mixFirst }}%; --pager-scale: 0.84;">|&lt;</span>
+        </li>
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <span class="pagination-dots__link is-disabled" style="--pager-mix: {{ $mixPrev }}%; --pager-scale: 0.97;">&lt;</span>
+        </li>
+      {{- end -}}
+
+      {{- /* Page 1 */ -}}
+      {{- $dist := math.Abs (sub 1 $current) -}}
+      {{- $d := cond (gt $dist $maxDist) $maxDist $dist -}}
+      {{- $mix := mul $d $step -}}
+      {{- $scale := "0.84" -}}
+      {{- $hoverScale := "0.98" -}}
+      {{- if eq $d 0 -}}
+        {{- $scale = "1.20" -}}
+        {{- $hoverScale = "1.26" -}}
+      {{- else if eq $d 1 -}}
+        {{- $scale = "1.05" -}}
+        {{- $hoverScale = "1.14" -}}
+      {{- else if eq $d 2 -}}
+        {{- $scale = "0.97" -}}
+        {{- $hoverScale = "1.08" -}}
+      {{- else if eq $d 3 -}}
+        {{- $scale = "0.90" -}}
+        {{- $hoverScale = "1.03" -}}
+      {{- end -}}
+      <li class="pagination-dots__item">
+        <a
+          class="pagination-dots__link {{ if eq 1 $current }}is-active{{ end }}"
+          href="{{ $p.First.URL }}"
+          style="--pager-mix: {{ $mix }}%; --pager-scale: {{ $scale }}; --pager-scale-hover: {{ $hoverScale }};"
+          aria-label="Page 1"
+        >
+          1
+        </a>
+      </li>
+
+      {{- /* Left ellipsis */ -}}
+      {{- if gt $start 2 -}}
+        <li class="pagination-dots__item pagination-dots__item--ellipsis">
+          <span class="pagination-dots__ellipsis" aria-hidden="true">...</span>
+        </li>
+      {{- end -}}
+
+      {{- /* Middle window pages */ -}}
+      {{- if le $start $end -}}
+        {{- range seq $start $end -}}
+          {{- $n := . -}}
+          {{- $pager := index $p.Pagers (sub $n 1) -}}
+          {{- $dist := math.Abs (sub $n $current) -}}
+          {{- $d := cond (gt $dist $maxDist) $maxDist $dist -}}
+          {{- $mix := mul $d $step -}}
+          {{- $scale := "0.84" -}}
+          {{- $hoverScale := "0.98" -}}
+          {{- if eq $d 0 -}}
+            {{- $scale = "1.20" -}}
+            {{- $hoverScale = "1.26" -}}
+          {{- else if eq $d 1 -}}
+            {{- $scale = "1.05" -}}
+            {{- $hoverScale = "1.14" -}}
+          {{- else if eq $d 2 -}}
+            {{- $scale = "0.97" -}}
+            {{- $hoverScale = "1.08" -}}
+          {{- else if eq $d 3 -}}
+            {{- $scale = "0.90" -}}
+            {{- $hoverScale = "1.03" -}}
+          {{- end -}}
+          <li class="pagination-dots__item">
+            <a
+              class="pagination-dots__link {{ if eq $n $current }}is-active{{ end }}"
+              href="{{ $pager.URL }}"
+              style="--pager-mix: {{ $mix }}%; --pager-scale: {{ $scale }}; --pager-scale-hover: {{ $hoverScale }};"
+              aria-label="Page {{ $n }}"
+            >
+              {{ $n }}
+            </a>
+          </li>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* Right ellipsis */ -}}
+      {{- if lt $end (sub $total 1) -}}
+        <li class="pagination-dots__item pagination-dots__item--ellipsis">
+          <span class="pagination-dots__ellipsis" aria-hidden="true">...</span>
+        </li>
+      {{- end -}}
+
+      {{- /* Last page */ -}}
+      {{- if gt $total 1 -}}
+        {{- $dist := math.Abs (sub $total $current) -}}
+        {{- $d := cond (gt $dist $maxDist) $maxDist $dist -}}
+        {{- $mix := mul $d $step -}}
+        {{- $scale := "0.84" -}}
+        {{- $hoverScale := "0.98" -}}
+        {{- if eq $d 0 -}}
+          {{- $scale = "1.20" -}}
+          {{- $hoverScale = "1.26" -}}
+        {{- else if eq $d 1 -}}
+          {{- $scale = "1.05" -}}
+          {{- $hoverScale = "1.14" -}}
+        {{- else if eq $d 2 -}}
+          {{- $scale = "0.97" -}}
+          {{- $hoverScale = "1.08" -}}
+        {{- else if eq $d 3 -}}
+          {{- $scale = "0.90" -}}
+          {{- $hoverScale = "1.03" -}}
+        {{- end -}}
+        <li class="pagination-dots__item">
+          <a
+            class="pagination-dots__link {{ if eq $total $current }}is-active{{ end }}"
+            href="{{ $p.Last.URL }}"
+            style="--pager-mix: {{ $mix }}%; --pager-scale: {{ $scale }}; --pager-scale-hover: {{ $hoverScale }};"
+            aria-label="Page {{ $total }}"
+          >
+            {{ $total }}
+          </a>
+        </li>
+      {{- end -}}
+
+      {{- /* Next / Last */ -}}
+      {{- /* > uses edgeLast (how far from end): page 1 with many pages -> deepest, near last -> lightest */ -}}
+      {{- $dNext := cond (gt $edgeLast $maxDist) $maxDist $edgeLast -}}
+      {{- $mixNext := mul $dNext $step -}}
+      {{- $dLast := add $dNext 1 -}}
+      {{- $dLast = cond (gt $dLast $maxDist) $maxDist $dLast -}}
+      {{- $mixLast := mul $dLast $step -}}
+      {{- if $p.HasNext -}}
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <a class="pagination-dots__link" href="{{ $p.Next.URL }}" style="--pager-mix: {{ $mixNext }}%; --pager-scale: 0.97; --pager-scale-hover: 1.08;" aria-label="Next page">&gt;</a>
+        </li>
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <a class="pagination-dots__link" href="{{ $p.Last.URL }}" style="--pager-mix: {{ $mixLast }}%; --pager-scale: 0.84; --pager-scale-hover: 0.98;" aria-label="Last page">&gt;|</a>
+        </li>
+      {{- else -}}
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <span class="pagination-dots__link is-disabled" style="--pager-mix: {{ $mixNext }}%; --pager-scale: 0.97;">&gt;</span>
+        </li>
+        <li class="pagination-dots__item pagination-dots__item--control">
+          <span class="pagination-dots__link is-disabled" style="--pager-mix: {{ $mixLast }}%; --pager-scale: 0.84;">&gt;|</span>
+        </li>
+      {{- end -}}
+    </ul>
+  </nav>
+{{- end -}}

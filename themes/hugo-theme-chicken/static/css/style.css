@@ -1,5 +1,11 @@
 :root {
   --logo-size: 2rem;
+
+  --pager-btn-size: 2.15rem;
+  --pager-max-scale: 1.26;
+  --pager-font-size: 0.95rem;
+  --pager-font-weight: 600;
+  --pager-font-family: "Courier New", Courier, monospace;
 }
 
 .inline-svg {
@@ -251,5 +257,88 @@ body {
 @media (max-width: 576px) {
   .post-card {
     grid-template-columns: 1fr;
+  }
+}
+
+.pagination-dots {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-dots__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0;
+  min-height: calc(var(--pager-btn-size) * var(--pager-max-scale));
+}
+
+.pagination-dots__item--ellipsis {
+  display: inline-flex;
+  align-items: center;
+}
+
+.pagination-dots__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-dots__ellipsis {
+  min-width: 1.6rem;
+  text-align: center;
+  color: var(--pager-text, currentColor);
+  opacity: 0.75;
+}
+
+.pagination-dots__link {
+  --pager-size: var(--pager-btn-size);
+  --pager-current-scale: var(--pager-scale, 1);
+  width: calc(var(--pager-size) * var(--pager-current-scale));
+  height: calc(var(--pager-size) * var(--pager-current-scale));
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 0;
+  text-decoration: none;
+  line-height: 1;
+  font-family: var(--pager-font-family);
+  font-size: var(--pager-font-size);
+  font-weight: var(--pager-font-weight);
+  font-variant-numeric: tabular-nums;
+  color: var(--pager-text, inherit);
+  border: 1px solid var(--pager-border);
+  background-color: color-mix(in srgb, var(--pager-accent), var(--pager-fade) var(--pager-mix));
+  transition: width 160ms ease, height 160ms ease, opacity 160ms ease;
+}
+
+.pagination-dots__link:hover {
+  --pager-current-scale: var(--pager-scale-hover, 1.08);
+}
+
+.pagination-dots__link.is-active {
+  background-color: var(--pager-accent);
+  border-color: var(--pager-accent);
+  color: var(--pager-active-text, #fff);
+}
+
+.pagination-dots__link.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+@supports not (background-color: color-mix(in srgb, #000, #fff)) {
+  .pagination-dots__link {
+    background-color: var(--pager-fade);
+  }
+
+  .pagination-dots__link.is-active {
+    background-color: var(--pager-accent);
   }
 }

@@ -8,6 +8,12 @@ body {
   --card-shadow-hover: 0 14px 35px rgba(0, 0, 0, 0.45);
   --card-thumb-bg: rgba(250, 246, 240, 0.06);
   --card-text-muted: rgba(250, 246, 240, 0.74);
+
+  --pager-accent: #f0c860;
+  --pager-fade: #4a4336;
+  --pager-border: rgba(240, 200, 96, 0.36);
+  --pager-text: #f6e8c3;
+  --pager-active-text: #2f2818;
 }
 
 a {
